@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.leapi.animals.R
 import com.leapi.animals.model.Animal
+import com.leapi.animals.util.getProgressDrawable
+import com.leapi.animals.util.loadImage
 import kotlinx.android.synthetic.main.item_animal.view.*
 
 //Adapter transform raw data to data to the screen
@@ -18,8 +20,6 @@ class AnimalListAdapter(private val animalList: ArrayList<Animal>) :
         notifyDataSetChanged() // informs system to reload all
     }
 
-    class AnimalViewHolder(var view: View) : RecyclerView.ViewHolder(view)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimalViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_animal, parent, false)
@@ -31,5 +31,8 @@ class AnimalListAdapter(private val animalList: ArrayList<Animal>) :
 
     override fun onBindViewHolder(holder: AnimalViewHolder, position: Int) {
         holder.view.animalName.text = animalList[position].name
+        holder.view.animalImage.loadImage(animalList[position].imageUrl, getProgressDrawable(holder.view.context))
     }
+
+    class AnimalViewHolder(var view: View): RecyclerView.ViewHolder(view)
 }
