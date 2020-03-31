@@ -2,10 +2,12 @@ package com.leapi.animals.util
 
 import android.content.Context
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.leapi.animals.R
+import retrofit2.http.FormUrlEncoded
 
 fun getProgressDrawable(context: Context): CircularProgressDrawable {
     return CircularProgressDrawable(context).apply {
@@ -23,4 +25,9 @@ fun ImageView.loadImage(uri: String?, progressDrawable: CircularProgressDrawable
         .setDefaultRequestOptions(options)
         .load(uri)
         .into(this)
+}
+
+@BindingAdapter("android:imageUrl")  //permits direct call from layout
+fun loadImage(view: ImageView, url: String?) {
+    view.loadImage(url, getProgressDrawable(view.context))
 }

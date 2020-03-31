@@ -11,7 +11,7 @@ data class ApiKey(
 
 data class Animal(
     val name: String?,
-    val taxonomy : Taxonomy?,
+    val taxonomy: Taxonomy?,
     val location: String?,
     val speed: Speed?,
     val diet: String?,
@@ -21,7 +21,7 @@ data class Animal(
     @SerializedName("image")
     val imageUrl: String?
 
-):Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readParcelable(Taxonomy::class.java.classLoader),
@@ -63,7 +63,7 @@ data class Taxonomy(
     val kingdom: String?,
     val order: String?,
     val family: String?
-):Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
@@ -95,7 +95,7 @@ data class Taxonomy(
 data class Speed(
     val metric: String?,
     val imperial: String?
-):Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString()
@@ -121,3 +121,7 @@ data class Speed(
         }
     }
 }
+
+data class AnimalPalette(
+    var color: Int
+)
