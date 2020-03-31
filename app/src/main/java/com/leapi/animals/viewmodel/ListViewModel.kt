@@ -3,6 +3,7 @@ package com.leapi.animals.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.leapi.animals.di.AppModule
 import com.leapi.animals.di.DaggerViewModelComponent
 import com.leapi.animals.model.Animal
 import com.leapi.animals.model.AnimalApiService
@@ -25,15 +26,21 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     @Inject
     lateinit var apiService: AnimalApiService
 
+
+
+    //private val prefs = SharedPreferencesHelper(getApplication())
+    @Inject
+    lateinit var prefs: SharedPreferencesHelper
+
     init {
-        DaggerViewModelComponent.create().inject(this)
+        //DaggerViewModelComponent.create().inject(this)
+        DaggerViewModelComponent.builder()
+            .appModule(AppModule(getApplication()))
+            .build()
+            .inject(this)
     }
 
-    private val prefs = SharedPreferencesHelper(getApplication())
-
     private var invalidApiKey = false
-
-
 
     fun refresh() {
         loading.value = true
