@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.leapi.animals.di.AppModule
+import com.leapi.animals.di.CONTEXT_APP
 import com.leapi.animals.di.DaggerViewModelComponent
+import com.leapi.animals.di.TypeOfContext
 import com.leapi.animals.model.Animal
 import com.leapi.animals.model.AnimalApiService
 import com.leapi.animals.model.ApiKey
@@ -30,6 +32,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     //private val prefs = SharedPreferencesHelper(getApplication())
     @Inject
+    @field: TypeOfContext(CONTEXT_APP)
     lateinit var prefs: SharedPreferencesHelper
 
     init {
