@@ -18,6 +18,11 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
+
+    constructor(application: Application, test: Boolean = true) : this(application) {
+        injected = true
+    }
+
     val animals by lazy { MutableLiveData<List<Animal>>() }
     val loadError by lazy { MutableLiveData<Boolean>() }
     val loading by lazy { MutableLiveData<Boolean>() }
@@ -29,23 +34,27 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var apiService: AnimalApiService
 
 
-
     //private val prefs = SharedPreferencesHelper(getApplication())
     @Inject
     @field: TypeOfContext(CONTEXT_APP)
     lateinit var prefs: SharedPreferencesHelper
 
-    init {
-        //DaggerViewModelComponent.create().inject(this)
-        DaggerViewModelComponent.builder()
-            .appModule(AppModule(getApplication()))
-            .build()
-            .inject(this)
+    //    init {
+//        //DaggerViewModelComponent.create().inject(this)
+    fun inject_abacaxi() {
+        if (!injected) {
+            DaggerViewModelComponent.builder()
+                .appModule(AppModule(getApplication()))
+                .build()
+                .inject(this)
+        }
     }
 
     private var invalidApiKey = false
+    private var injected = false
 
     fun refresh() {
+        inject_abacaxi()
         loading.value = true
         invalidApiKey = false
         val key: String? = prefs.getApiKey()
@@ -57,15 +66,21 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun hardRefresh() {
+        inject_abacaxi()
         loading.value = true
         getKey()
     }
 
     private fun getKey() {
+        //Adds a disposable to this container or disposes it if the container has been disposed.
         disposable.add(
+            //Adiciona um disposableSingleObserver que retorna do Single.subscribeWith().
             apiService.getApiKey()
+                //Utiliza um Scheduler do tipo newThread para o upstream
                 .subscribeOn(Schedulers.newThread())
+                //Utiliza o scheduler da mainthread para o downstream
                 .observeOn(AndroidSchedulers.mainThread())
+                //retorna o disposableSingleObserver
                 .subscribeWith(object : DisposableSingleObserver<ApiKey>() {
                     override fun onSuccess(key: ApiKey) {
                         if (key.key.isNullOrEmpty()) {
